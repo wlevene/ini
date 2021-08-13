@@ -263,7 +263,7 @@ Output
 
 ### Dump AST struct
 
-```json
+```
 KVNode {
     Key: a
     Value: '23'34?::'<>,.'
