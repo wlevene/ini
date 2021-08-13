@@ -10,6 +10,7 @@ ini parser library for Golang,  easy-use、fast、 use ast parse content
 
 
 [![Build Status](https://travis-ci.org/meolu/walden.svg?branch=master)](https://github.com/wlevene/ini)
+![version](https://img.shields.io/badge/version-0.1.1-blue)
 
 # Features
 
