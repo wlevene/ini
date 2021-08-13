@@ -1,0 +1,13 @@
+https://github.com/khirayama/learn-computer-science/blob/b5c9fcdf11/books/interpreter-with-golang/go-monkey/src/monkey/parser/parser.go
+
+https://github.com/tufanbarisyildirim/gonginx/blob/4700fcc228/parser/token/token.go
+
+https://github.com/tufanbarisyildirim/gonginx/blob/4700fcc228/parser/lexer.go
+
+https://github.com/goby-lang/goby/blob/master/compiler/lexer/lexer.go
+
+
+// TODO: Struct tag `ini:"tag"`  same as Json
+// TODO: Write ini  保留全文档结构 如 注释、换行等
+
+// TODO: 文件读取如果非字母会引起列循环  负数也不行
