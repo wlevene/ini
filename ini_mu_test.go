@@ -8,7 +8,7 @@ import (
 type TestConfig struct {
 	K    string  `ini:"k" json:"k,omitempty"`
 	K1   int     `ini:"k1" json:"k1,omitempty"`
-	K2   float64 `json:"k2,omitempty" ini:"k2"`
+	K2   float64 `ini:"k2"`
 	K3   int64   `ini:"k3"`
 	User User    `ini:"user"`
 }
@@ -34,5 +34,6 @@ age=-23
 
 	Unmarshal([]byte(doc), &cfg)
 	fmt.Println("cfg:", cfg)
+	fmt.Printf("%v\n", cfg)
 
 }

@@ -68,6 +68,16 @@ func (l *Lexer) skipspace() {
 		l.readChar()
 	}
 }
+func (l *Lexer) skipline() {
+
+	for {
+		if l.char == LineBreak {
+			l.line++
+			break
+		}
+		l.readChar()
+	}
+}
 
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
@@ -85,9 +95,13 @@ func (l *Lexer) NextToken() token.Token {
 		tok.Literal = ""
 		tok.Type = token.TokenType_EOF
 		return tok
+	case '#':
+		fallthrough
+	case ';':
+		l.skipline()
+
 	default:
 		tok.Literal = string(l.readStatement())
-		l.skipspace()
 		ch = l.char
 
 		if ch == '=' {
@@ -161,7 +175,10 @@ func newToken(tokenType token.TokenType, ch byte, line int) token.Token {
 func (l *Lexer) readStatement() []byte {
 	position := l.position
 	for {
-		if l.char == LineBreak || l.char == '=' || l.char == ']' || l.char == ' ' {
+		if l.char == LineBreak ||
+			l.char == '=' ||
+			l.char == ']' ||
+			l.char == ' ' {
 			break
 		}
 		l.readChar()

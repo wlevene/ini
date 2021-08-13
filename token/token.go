@@ -9,10 +9,11 @@ const (
 	TokenType_EOF     = "EOF"
 	Ident             = "Ident"
 
-	TokenType_SECTION = "SECTION"
-	TokenType_KEY     = "KEY"
-	TokenType_VALUE   = "VALUE"
-	TokenType_COMMENT = "#"
+	TokenType_SECTION  = "SECTION"
+	TokenType_KEY      = "KEY"
+	TokenType_VALUE    = "VALUE"
+	TokenType_COMMENT  = "#"
+	TokenType_COMMENT2 = "#"
 
 	TokenType_ASSIGN   = "="
 	TokenType_LBRACKET = "["

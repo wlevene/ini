@@ -8,8 +8,13 @@ import (
 
 func TestIni(t *testing.T) {
 	doc := `
+; 123
 [section]
 k=v
+; dsfads 
+;123
+#3452345
+
 
 [section1]
 k1=v1
