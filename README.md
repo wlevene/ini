@@ -6,6 +6,8 @@ ini parser library for Golang,  easy-use, fast， use ast parse content
 
 
 
+[![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/wlevene/ini)
+
 # Features
 
 * 支持[]byte读取
@@ -232,3 +234,15 @@ Output
 ## TODO
 
 * wirte 
+
+
+
+## Contributors
+
+
+
+
+
+## License
+
+[MIT](https://github.com/RichardLitt/standard-readme/blob/master/LICENSE) 
