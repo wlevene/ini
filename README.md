@@ -9,11 +9,11 @@ ini parser library for Golang,  easy-use、fast、 use ast parse content
 
 # Features
 
-* 支持[]byte读取
-* 支持文件加载
-* 支持文件监控，实时生效，无需重新加载
-* 解构体解析
-* ini转json
+* can be read by []byte
+* can be read by file
+* Supports file monitoring and takes effect in real time without reloading
+* Unmarshal to struct
+* Marshal to Json
 
 
 
