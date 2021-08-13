@@ -48,8 +48,8 @@ k2=1
 k3=3.5
 k4=0.0.0.0
 `
-	v1 := ini.New().Load([]byte(doc)).Section("section1").Get("k1")
-	fmt.Println(v1)
+v1 := ini.New().Load([]byte(doc)).Section("section1").Get("k1")
+fmt.Println(v1)
 ```
 
 Output
@@ -61,15 +61,15 @@ v1
 
 
 ```go
-	i := ini.New().Load([]byte(doc))
-	v1 := i.Section("section1").Get("k1")
-	v2 := i.GetInt("k2")
-	v3 := i.GetFloat64("k3")
-	v4 := i.Get("k4")
-	v5 := i.GetIntDef("keyint", 10)
-	v6 := i.GetDef("keys", "defualt")
+i := ini.New().Load([]byte(doc))
+v1 := i.Section("section1").Get("k1")
+v2 := i.GetInt("k2")
+v3 := i.GetFloat64("k3")
+v4 := i.Get("k4")
+v5 := i.GetIntDef("keyint", 10)
+v6 := i.GetDef("keys", "defualt")
 
-	fmt.Printf("v1:%v v2:%v v3:%v v4:%v v5:%v v6:%v\n", v1, v2, v3, v4, v5, v6)
+fmt.Printf("v1:%v v2:%v v3:%v v4:%v v5:%v v6:%v\n", v1, v2, v3, v4, v5, v6)
 ```
 
 
@@ -127,10 +127,10 @@ name=tom
 age=-23
 `
 
-	cfg := TestConfig{}
+cfg := TestConfig{}
 
-	ini.Unmarshal([]byte(doc), &cfg)
-	fmt.Println("cfg:", cfg)
+ini.Unmarshal([]byte(doc), &cfg)
+fmt.Println("cfg:", cfg)
 ```
 
 Output
