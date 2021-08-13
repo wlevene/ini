@@ -261,6 +261,73 @@ Output
 ```
 
 
+### Dump AST struct
+
+```json
+KVNode {
+    Key: a
+    Value: '23'34?::'<>,.'
+}
+KVNode {
+    Key: c
+    Value: d
+}
+Section {
+    Section: [s1]
+    KVNode {
+        Key: k
+        Value: 67676
+    }
+    KVNode {
+        Key: k2
+        Value: 34w2
+    }
+}
+Section {
+    Section: [s2]
+    KVNode {
+        Value: 3
+        Key: k
+    }
+    KVNode {
+        Key: k2
+        Value: 945
+    }
+    KVNode {
+        Key: k3
+        Value: -435
+    }
+    KVNode {
+        Key: k4
+        Value: 0.0.0.0
+    }
+    KVNode {
+        Value: 127.0.0.1
+        Key: k5
+    }
+    KVNode {
+        Key: k6
+        Value: levene@github.com
+    }
+    KVNode {
+        Key: k7
+        Value: ~/.path.txt
+    }
+    KVNode {
+        Key: k8
+        Value: ./34/34/uh.txt
+    }
+    KVNode {
+        Key: k9
+        Value: 234@!@#$%^&*()324
+    }
+    KVNode {
+        Key: k10
+        Value: '23'34?::'<>,.'
+    }
+}
+```
+
 
 ## Contributors
 
