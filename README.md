@@ -196,6 +196,33 @@ Output
 
 
 
+### Watch File
+
+```go
+file := "./test.ini"
+
+idoc := idoc.New().WatchFile(file)
+v := idoc.Section("s2").Get("k1")
+fmt.Println("v:", v1)
+
+// modify k1=v1   ==> k1=v2
+time.Sleep(10 * time.Second)
+
+v = idoc.Section("s2").Get("k1")
+fmt.Println("v:", v1)
+```
+
+Output
+
+```
+v: v1
+v: v2
+```
+
+
+
+
+
 Print file json
 
 ```go
@@ -230,12 +257,6 @@ Output
 
 
 
-## TODO
-
-* wirte 
-
-
-
 ## Contributors
 
 
@@ -244,4 +265,4 @@ Output
 
 ## License
 
-[MIT](https://github.com/RichardLitt/standard-readme/blob/master/LICENSE) 
+[MIT](https://github.com/RichardLitt/standard-readme/blob/master/LICENSE)  
