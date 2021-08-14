@@ -206,7 +206,7 @@ Output
 ```go
 file := "./test.ini"
 
-idoc := idoc.New().WatchFile(file)
+idoc := ini.New().WatchFile(file)
 v := idoc.Section("s2").Get("k1")
 fmt.Println("v:", v1)
 
