@@ -3,10 +3,9 @@
 ![logo](./logo.png)
 
 
-
 #  INI Parser Library
 
-ini parser library for Golang,  easy-use、fast、 use ast parse content
+ini parser library for Golang,easy-use,fast
 
 
 [![Build Status](https://travis-ci.org/meolu/walden.svg?branch=master)](https://github.com/wlevene/ini)
@@ -14,12 +13,11 @@ ini parser library for Golang,  easy-use、fast、 use ast parse content
 
 # Features
 
-* can be read by []byte
-* can be read by file
+* Can be read by []byte
+* Can be read by file
 * Supports file monitoring and takes effect in real time without reloading
-* Unmarshal to struct
+* Unmarshal to Struct
 * Marshal to Json
-
 
 
 # Installation
@@ -29,14 +27,12 @@ go get github.com/wlevene/ini
 ```
 
 
-
 # Example
 
 ```go
 import (
-	"fmt"
-
-	"github.com/wlevene/ini"
+    "fmt"
+    "github.com/wlevene/ini"
 )
 ```
 
@@ -64,7 +60,6 @@ v1
 ```
 
 
-
 ```go
 i := ini.New().Load([]byte(doc))
 v1 := i.Section("section1").Get("k1")
@@ -77,14 +72,11 @@ v6 := i.GetDef("keys", "defualt")
 fmt.Printf("v1:%v v2:%v v3:%v v4:%v v5:%v v6:%v\n", v1, v2, v3, v4, v5, v6)
 ```
 
-
-
 Output
 
 ```
 v1:v1 v2:1 v3:3.5 v4:0.0.0.0 v5:10 v6:defualt
 ```
-
 
 
 ### Marshal2Json
@@ -98,8 +90,6 @@ Output
 ```json
 {"section":{"k":"v"},"section1":{"k1":"v1","k2":"1","k3":"3.5","k4":"0.0.0.0"}}
 ```
-
-
 
 ### Unmarshal Struct
 
@@ -116,7 +106,6 @@ type User struct {
 	Name string `ini:"name"`
 	Age  int    `ini:"age"`
 }
-
 
 ```
 
@@ -141,7 +130,7 @@ fmt.Println("cfg:", cfg)
 Output
 
 ```
-{v 2 2.2 3 {tom -23}}
+cfg: {v 2 2.2 3 {tom -23}}
 ```
 
 
@@ -226,9 +215,7 @@ v: v2
 
 
 
-
-
-Print file json
+Print file with json
 
 ```go
 file := "./test.ini"
@@ -330,8 +317,6 @@ Section {
 
 
 ## Contributors
-
-
 
 
 
