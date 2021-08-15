@@ -1,8 +1,6 @@
 package lexer
 
 import (
-	"fmt"
-
 	"github.com/wlevene/ini/token"
 )
 
@@ -118,14 +116,14 @@ func (l *Lexer) NextToken() token.Token {
 			tok.Type = token.TokenType_VALUE
 		}
 		tok.Line = l.line
-		fmt.Println("---")
-		fmt.Print("Literal:", tok.Literal)
-		fmt.Print(" pch:", string(ch))
-		fmt.Print(" pchc:", ch)
-		fmt.Print(" pchcpos:", l.position)
-		fmt.Println(" type:", tok.Type)
-		fmt.Println("---")
-		fmt.Println("token:", tok.String())
+		// fmt.Println("---")
+		// fmt.Print("Literal:", tok.Literal)
+		// fmt.Print(" pch:", string(ch))
+		// fmt.Print(" pchc:", ch)
+		// fmt.Print(" pchcpos:", l.position)
+		// fmt.Println(" type:", tok.Type)
+		// fmt.Println("---")
+		// fmt.Println("token:", tok.String())
 		return tok
 	}
 
