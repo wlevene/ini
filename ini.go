@@ -261,6 +261,57 @@ func (this *Ini) GetFloat64Def(key string, def float64) float64 {
 	return fval
 }
 
+// TODO: implement Write
+func (this *Ini) Set(key string, val interface{}) error {
+	return nil
+}
+
+func (this *Ini) Del(key string) error {
+
+	if this.doc == nil ||
+		this.err != nil {
+		return nil
+	}
+
+	if key == "" {
+		return nil
+	}
+
+	if this.currectSection == nil {
+
+		for index, kvnodev2 := range this.doc.KVs {
+
+			if kvnodev2.Key.Literal == key {
+				this.doc.KVs = append(this.doc.KVs[:index], this.doc.KVs[(index+1):]...)
+				break
+			}
+		}
+	} else {
+		for c := this.currectSection.FirstChild(); c != nil; c = c.NextSibling() {
+			kvnodev2 := c.(*ast.KVNode)
+			if kvnodev2.Key.Literal == key {
+
+				this.currectSection.RemoveChild(this.currectSection, c)
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+func (this *Ini) DelSection(section string) error {
+	return nil
+}
+
+func (this *Ini) Save(filename string) error {
+	return nil
+}
+
+func (this *Ini) SaveFile(filename string) error {
+	return nil
+}
+
 // ----------------------------------------------------------------
 
 func (this *Ini) sectionForAstDoc(section string) {

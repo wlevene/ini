@@ -1,6 +1,8 @@
 package lexer
 
 import (
+	"fmt"
+
 	"github.com/wlevene/ini/token"
 )
 
@@ -14,6 +16,8 @@ type Lexer struct {
 	position      int
 	read_position int
 	line          int
+
+	// TODO: line_position
 }
 
 func New(input string) *Lexer {
@@ -68,6 +72,7 @@ func (l *Lexer) skipspace() {
 		l.readChar()
 	}
 }
+
 func (l *Lexer) skipline() {
 
 	for {
@@ -102,6 +107,7 @@ func (l *Lexer) NextToken() token.Token {
 
 	default:
 		tok.Literal = string(l.readStatement())
+		l.skipspace()
 		ch = l.char
 
 		if ch == '=' {
@@ -112,14 +118,14 @@ func (l *Lexer) NextToken() token.Token {
 			tok.Type = token.TokenType_VALUE
 		}
 		tok.Line = l.line
-		// fmt.Println("---")
-		// fmt.Print("Literal:", tok.Literal)
-		// fmt.Print(" pch:", string(ch))
-		// fmt.Print(" pchc:", ch)
-		// fmt.Print(" pchcpos:", l.position)
-		// fmt.Println(" type:", tok.Type)
-		// fmt.Println("---")
-		// fmt.Println("token:", tok.String())
+		fmt.Println("---")
+		fmt.Print("Literal:", tok.Literal)
+		fmt.Print(" pch:", string(ch))
+		fmt.Print(" pchc:", ch)
+		fmt.Print(" pchcpos:", l.position)
+		fmt.Println(" type:", tok.Type)
+		fmt.Println("---")
+		fmt.Println("token:", tok.String())
 		return tok
 	}
 
