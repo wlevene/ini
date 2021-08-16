@@ -199,7 +199,6 @@ k =v
 [section]
 a=b
 c=d
-
 `
 	ini := New().Load([]byte(doc)).Section("section")
 	fmt.Println("--------------------------------")
@@ -225,5 +224,9 @@ c=d
 	if v2 != "SET" {
 		t.Errorf("Error: %s", v2)
 	}
+
+	fmt.Println("--------------------------------")
+	ini.Set("a1", 1).Section("section").Set("k1", 11.11)
+	ini.Dump()
 
 }

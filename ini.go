@@ -460,11 +460,13 @@ func (this *Ini) setKVNode(key string, val string) *Ini {
 		return this
 	}
 
+	line := 1
 	found := false
 
 	if this.currectSection == nil {
 
 		for _, kvnodev2 := range this.doc.KVs {
+			line = kvnodev2.Key.Line + 1
 			if kvnodev2.Key.Literal == key {
 				kvnodev2.Value.Literal = val
 				return this
@@ -475,10 +477,12 @@ func (this *Ini) setKVNode(key string, val string) *Ini {
 			Key: token.Token{
 				Type:    token.TokenType_KEY,
 				Literal: key,
+				Line:    line,
 			},
 			Value: token.Token{
 				Type:    token.TokenType_VALUE,
-				Literal: key,
+				Literal: val,
+				Line:    line,
 			},
 		}
 
@@ -488,6 +492,7 @@ func (this *Ini) setKVNode(key string, val string) *Ini {
 		for c := this.currectSection.FirstChild(); c != nil; c = c.NextSibling() {
 
 			kvnodev2 := c.(*ast.KVNode)
+			line = kvnodev2.Key.Line + 1
 			if kvnodev2.Key.Literal == key {
 				kvnodev2.Value.Literal = val
 				return this
@@ -501,10 +506,12 @@ func (this *Ini) setKVNode(key string, val string) *Ini {
 				Key: token.Token{
 					Type:    token.TokenType_KEY,
 					Literal: key,
+					Line:    line,
 				},
 				Value: token.Token{
 					Type:    token.TokenType_VALUE,
-					Literal: key,
+					Literal: val,
+					Line:    line,
 				},
 			}
 
