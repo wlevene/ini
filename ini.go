@@ -2,6 +2,7 @@ package ini
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"strconv"
 
@@ -261,20 +262,50 @@ func (this *Ini) GetFloat64Def(key string, def float64) float64 {
 	return fval
 }
 
-// TODO: implement Write
-func (this *Ini) Set(key string, val interface{}) error {
-	return nil
-}
-
-func (this *Ini) Del(key string) error {
+func (this *Ini) Set(key string, val interface{}) *Ini {
 
 	if this.doc == nil ||
 		this.err != nil {
-		return nil
+		return this
+	}
+
+	if key == "" || val == nil {
+		return this
+	}
+
+	var val_str string
+	switch val.(type) {
+	case int:
+		val_str = fmt.Sprintf("%d", val.(int))
+	case int32:
+		val_str = fmt.Sprintf("%d", val.(int32))
+	case int64:
+		val_str = fmt.Sprintf("%d", val.(int64))
+	case float32:
+		val_str = strconv.FormatFloat(float64(val.(float32)), 'f', -1, 32)
+	case float64:
+		val_str = strconv.FormatFloat(float64(val.(float64)), 'f', -1, 64)
+	case string:
+		val_str = val.(string)
+	default:
+		return this
+	}
+
+	this.setKVNode(key, val_str)
+
+	return this
+
+}
+
+func (this *Ini) Del(key string) *Ini {
+
+	if this.doc == nil ||
+		this.err != nil {
+		return this
 	}
 
 	if key == "" {
-		return nil
+		return this
 	}
 
 	if this.currectSection == nil {
@@ -290,26 +321,46 @@ func (this *Ini) Del(key string) error {
 		for c := this.currectSection.FirstChild(); c != nil; c = c.NextSibling() {
 			kvnodev2 := c.(*ast.KVNode)
 			if kvnodev2.Key.Literal == key {
-
 				this.currectSection.RemoveChild(this.currectSection, c)
 				break
 			}
 		}
 	}
 
-	return nil
+	return this
 }
 
-func (this *Ini) DelSection(section string) error {
-	return nil
+func (this *Ini) DelSection(section string) *Ini {
+	if this.doc == nil ||
+		this.err != nil {
+		return this
+	}
+
+	if section == "" {
+		return this
+	}
+
+	if this.currectSection == nil {
+
+		for index, sectionNode := range this.doc.SectS {
+			if sectionNode.Name.Literal == section {
+				this.doc.SectS = append(this.doc.SectS[:index], this.doc.SectS[(index+1):]...)
+				break
+			}
+		}
+	}
+
+	return this
 }
 
-func (this *Ini) Save(filename string) error {
-	return nil
+// TODO: implement Save
+func (this *Ini) Save(filename string) *Ini {
+	return this
 }
 
-func (this *Ini) SaveFile(filename string) error {
-	return nil
+// TODO: implement SaveFile
+func (this *Ini) SaveFile(filename string) *Ini {
+	return this
 }
 
 // ----------------------------------------------------------------
@@ -362,4 +413,100 @@ func (this *Ini) getToken(key string) token.Token {
 	}
 
 	return tok
+}
+
+func (this *Ini) getTokenV2(key string) *token.Token {
+
+	var tok *token.Token
+
+	if key == "" {
+		return tok
+	}
+
+	if this.currectSection == nil {
+
+		for _, kvnodev2 := range this.doc.KVs {
+
+			if kvnodev2.Key.Literal == key {
+
+				tok = &kvnodev2.Value
+
+				return tok
+			}
+		}
+
+	} else {
+		for c := this.currectSection.FirstChild(); c != nil; c = c.NextSibling() {
+
+			kvnodev2 := c.(*ast.KVNode)
+			if kvnodev2.Key.Literal == key {
+				tok = &kvnodev2.Value
+				return tok
+			}
+		}
+	}
+
+	return tok
+}
+
+func (this *Ini) setKVNode(key string, val string) *Ini {
+
+	if key == "" || val == "" {
+		return this
+	}
+
+	found := false
+
+	if this.currectSection == nil {
+
+		for _, kvnodev2 := range this.doc.KVs {
+			if kvnodev2.Key.Literal == key {
+				kvnodev2.Value.Literal = val
+				return this
+			}
+		}
+
+		kvnode := &ast.KVNode{
+			Key: token.Token{
+				Type:    token.TokenType_KEY,
+				Literal: key,
+			},
+			Value: token.Token{
+				Type:    token.TokenType_VALUE,
+				Literal: key,
+			},
+		}
+
+		this.doc.KVs = append(this.doc.KVs, kvnode)
+
+	} else {
+		for c := this.currectSection.FirstChild(); c != nil; c = c.NextSibling() {
+
+			kvnodev2 := c.(*ast.KVNode)
+			if kvnodev2.Key.Literal == key {
+				kvnodev2.Value.Literal = val
+				return this
+
+			}
+		}
+
+		if found == false {
+
+			kvnode := &ast.KVNode{
+				Key: token.Token{
+					Type:    token.TokenType_KEY,
+					Literal: key,
+				},
+				Value: token.Token{
+					Type:    token.TokenType_VALUE,
+					Literal: key,
+				},
+			}
+
+			this.currectSection.AppendChild(this.currectSection, kvnode)
+
+		}
+	}
+
+	return this
 }

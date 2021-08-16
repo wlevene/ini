@@ -26,9 +26,12 @@ k1=v1
 func TestIni0(t *testing.T) {
 	doc := `
 [section]
-k=v
+k =v
 `
-	v := New().Load([]byte(doc)).Section("section").Get("k")
+	i_doc := New().Load([]byte(doc)).Section("section")
+	i_doc.Dump()
+
+	v := i_doc.Get("k")
 	fmt.Println("v: ", v)
 	if v != "v" {
 		t.Errorf("error %s", v)
@@ -161,5 +164,66 @@ func TestIniWatchFile(t *testing.T) {
 	time.Sleep(10 * time.Second)
 	fmt.Println(string(ini.Marshal2Json()))
 	ini.StopWatch()
+
+}
+
+func TestIniDelete(t *testing.T) {
+	doc := `
+k=v
+a=b
+c=d
+[section]
+
+`
+	ini := New().Load([]byte(doc))
+	fmt.Println("--------------------------------")
+	ini.Dump()
+
+	fmt.Println("--------------------------------")
+	ini.Del("a")
+	ini.Dump()
+
+	fmt.Println("--------------------------------")
+	ini.Del("c")
+	ini.Dump()
+
+	fmt.Println("--------------------------------")
+	ini.Del("k")
+	ini.Dump()
+
+}
+
+func TestIniSet(t *testing.T) {
+	doc := `
+k =v
+[section]
+a=b
+c=d
+
+`
+	ini := New().Load([]byte(doc)).Section("section")
+	fmt.Println("--------------------------------")
+	ini.Dump()
+
+	fmt.Println("--------------------------------")
+	ini.Set("a", 11).Set("c", 12.3).Section("").Set("k", "SET")
+	ini.Dump()
+
+	v := ini.Section("section").GetInt("a")
+
+	if v != 11 {
+		t.Errorf("Error: %d", v)
+	}
+
+	v1 := ini.GetFloat64("c")
+
+	if v1 != 12.3 {
+		t.Errorf("Error: %f", v1)
+	}
+
+	v2 := ini.Section("").Get("k")
+	if v2 != "SET" {
+		t.Errorf("Error: %s", v2)
+	}
 
 }
