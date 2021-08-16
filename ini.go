@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"strconv"
+	"strings"
 
 	"github.com/wlevene/ini/ast"
 	"github.com/wlevene/ini/lexer"
@@ -290,6 +291,10 @@ func (this *Ini) Set(key string, val interface{}) *Ini {
 	default:
 		return this
 	}
+
+	val_str = strings.Replace(val_str, "\n", "", -1)
+	val_str = strings.Replace(val_str, "\t", "", -1)
+	val_str = strings.Trim(val_str, " ")
 
 	this.setKVNode(key, val_str)
 
