@@ -52,12 +52,13 @@ func (p *Parser) ParseDocument() (doc *ast.Doc, err error) {
 
 		if p.currentToken.Type == token.TokenType_SECTION {
 
-			if curSection != nil {
-				doc.SectS = append(doc.SectS, curSection)
-			}
 			curSection = nil
 			curSection = &ast.SetcionNode{
 				Name: p.currentToken,
+			}
+
+			if curSection != nil {
+				doc.AppendChild(doc, curSection)
 			}
 
 		} else if p.currentToken.Type == token.TokenType_KEY {
@@ -71,17 +72,19 @@ func (p *Parser) ParseDocument() (doc *ast.Doc, err error) {
 				if curSection != nil {
 					curSection.AppendChild(curSection, KV)
 				} else {
-					doc.KVs = append(doc.KVs, KV)
+					doc.AppendChild(doc, KV)
 				}
 			}
+		} else if p.currentToken.Type == token.TokenType_COMMENT {
+			comment := &ast.CommentNode{
+				Comment: p.currentToken,
+			}
+			doc.AppendChild(doc, comment)
 		}
 
 		p.nextToken()
 	}
 
-	if curSection != nil {
-		doc.SectS = append(doc.SectS, curSection)
-	}
 	return doc, nil
 }
 func (p *Parser) nextToken() {

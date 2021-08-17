@@ -9,6 +9,9 @@ import (
 func TestIni(t *testing.T) {
 	doc := `
 ; 123
+c=d
+# 434
+
 [section]
 k=v
 ; dsfads 
@@ -97,7 +100,7 @@ c= d
 a1 = 2.1 
 `
 	ini := New().Section("").Load([]byte(doc))
-	// ini.Dump()
+	ini.Dump()
 	v := ini.Get("a")
 	if v != "b" {
 		t.Errorf("error %s:%d", v, len(v))
@@ -141,7 +144,11 @@ k =v
 a= b
 `
 	ini := New().Load([]byte(doc))
-	fmt.Println(string(ini.Marshal2Json()))
+	json_str := string(ini.Marshal2Json())
+	fmt.Println(json_str)
+	if json_str != `{"a":"b","s1":{"k":"v","k1":"v12"},"s2":{"k2":"v22"},"s3":{"a":"b","k":"v"}}` {
+		t.Errorf("error %v", json_str)
+	}
 
 }
 

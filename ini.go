@@ -15,6 +15,8 @@ import (
 	"github.com/fsnotify/fsnotify"
 )
 
+// TODO: new section
+
 type (
 	Ini struct {
 		currectSection *ast.SetcionNode
@@ -119,7 +121,7 @@ func (in *Ini) Dump() {
 		return
 	}
 
-	in.doc.Dump()
+	in.doc.DumpV2()
 }
 
 func (this *Ini) Marshal2Map() map[string]interface{} {
@@ -133,21 +135,25 @@ func (this *Ini) Marshal2Map() map[string]interface{} {
 	}
 
 	kvMaps := make(map[string]interface{})
-	for _, kv := range this.doc.KVs {
-		kvMaps[kv.Key.Literal] = kv.Value.Literal
-	}
 
-	for _, sec := range this.doc.SectS {
-
-		secMap := make(map[string]interface{})
-
-		for kv := sec.FirstChild(); kv != nil; kv = kv.NextSibling() {
-			if kvnode, ok := kv.(*ast.KVNode); ok {
-				secMap[kvnode.Key.Literal] = kvnode.Value.Literal
-			}
+	for c := this.doc.FirstChild(); c != nil; c = c.NextSibling() {
+		if kv_node, ok := c.(*ast.KVNode); ok {
+			kvMaps[kv_node.Key.Literal] = kv_node.Value.Literal
 		}
 
-		kvMaps[sec.Name.Literal] = secMap
+		if sect_node, ok := c.(*ast.SetcionNode); ok {
+
+			secMap := make(map[string]interface{})
+
+			for kv := sect_node.FirstChild(); kv != nil; kv = kv.NextSibling() {
+				if kvnode, ok := kv.(*ast.KVNode); ok {
+					secMap[kvnode.Key.Literal] = kvnode.Value.Literal
+				}
+			}
+
+			kvMaps[sect_node.Name.Literal] = secMap
+			continue
+		}
 	}
 
 	return kvMaps
@@ -315,13 +321,20 @@ func (this *Ini) Del(key string) *Ini {
 
 	if this.currectSection == nil {
 
-		for index, kvnodev2 := range this.doc.KVs {
-
-			if kvnodev2.Key.Literal == key {
-				this.doc.KVs = append(this.doc.KVs[:index], this.doc.KVs[(index+1):]...)
-				break
+		for c := this.doc.FirstChild(); c != nil; c = c.NextSibling() {
+			if kv_node, ok := c.(*ast.KVNode); ok {
+				if kv_node.Key.Literal == key {
+					this.doc.RemoveChild(this.doc, kv_node)
+					break
+				}
+				continue
 			}
+
+			// if sect_node, ok := c.(*ast.SetcionNode); ok {
+			// 	continue
+			// }
 		}
+
 	} else {
 		for c := this.currectSection.FirstChild(); c != nil; c = c.NextSibling() {
 			kvnodev2 := c.(*ast.KVNode)
@@ -347,10 +360,13 @@ func (this *Ini) DelSection(section string) *Ini {
 
 	if this.currectSection == nil {
 
-		for index, sectionNode := range this.doc.SectS {
-			if sectionNode.Name.Literal == section {
-				this.doc.SectS = append(this.doc.SectS[:index], this.doc.SectS[(index+1):]...)
-				break
+		for c := this.doc.FirstChild(); c != nil; c = c.NextSibling() {
+
+			if sect_node, ok := c.(*ast.SetcionNode); ok {
+				if sect_node.Name.Literal == section {
+					this.doc.RemoveChild(this.doc, sect_node)
+					break
+				}
 			}
 		}
 	}
@@ -378,10 +394,18 @@ func (this *Ini) sectionForAstDoc(section string) {
 	}
 
 	this.currectSection = nil
-	for _, v := range this.doc.SectS {
-		if v.Name.Literal == section {
-			this.currectSection = v
-			return
+	if section == "" {
+		return
+	}
+
+	for c := this.doc.FirstChild(); c != nil; c = c.NextSibling() {
+
+		if sect_node, ok := c.(*ast.SetcionNode); ok {
+
+			if sect_node.Name.Literal == section {
+				this.currectSection = sect_node
+				return
+			}
 		}
 	}
 }
@@ -396,13 +420,13 @@ func (this *Ini) getToken(key string) token.Token {
 
 	if this.currectSection == nil {
 
-		for _, kvnodev2 := range this.doc.KVs {
-
-			if kvnodev2.Key.Literal == key {
-
-				tok = kvnodev2.Value
-
-				return tok
+		for c := this.doc.FirstChild(); c != nil; c = c.NextSibling() {
+			if kv_node, ok := c.(*ast.KVNode); ok {
+				if kv_node.Key.Literal == key {
+					tok = kv_node.Value
+					return tok
+				}
+				continue
 			}
 		}
 
@@ -412,40 +436,6 @@ func (this *Ini) getToken(key string) token.Token {
 			kvnodev2 := c.(*ast.KVNode)
 			if kvnodev2.Key.Literal == key {
 				tok = kvnodev2.Value
-				return tok
-			}
-		}
-	}
-
-	return tok
-}
-
-func (this *Ini) getTokenV2(key string) *token.Token {
-
-	var tok *token.Token
-
-	if key == "" {
-		return tok
-	}
-
-	if this.currectSection == nil {
-
-		for _, kvnodev2 := range this.doc.KVs {
-
-			if kvnodev2.Key.Literal == key {
-
-				tok = &kvnodev2.Value
-
-				return tok
-			}
-		}
-
-	} else {
-		for c := this.currectSection.FirstChild(); c != nil; c = c.NextSibling() {
-
-			kvnodev2 := c.(*ast.KVNode)
-			if kvnodev2.Key.Literal == key {
-				tok = &kvnodev2.Value
 				return tok
 			}
 		}
@@ -465,12 +455,20 @@ func (this *Ini) setKVNode(key string, val string) *Ini {
 
 	if this.currectSection == nil {
 
-		for _, kvnodev2 := range this.doc.KVs {
-			line = kvnodev2.Key.Line + 1
-			if kvnodev2.Key.Literal == key {
-				kvnodev2.Value.Literal = val
-				return this
+		var last_kv_node *ast.KVNode
+		for c := this.doc.FirstChild(); c != nil; c = c.NextSibling() {
+			if kv_node, ok := c.(*ast.KVNode); ok {
+				last_kv_node = kv_node
+				if kv_node.Key.Literal == key {
+					kv_node.Value.Literal = val
+					return this
+				}
+				continue
 			}
+
+			// if sect_node, ok := c.(*ast.SetcionNode); ok {
+			// 	continue
+			// }
 		}
 
 		kvnode := &ast.KVNode{
@@ -486,9 +484,11 @@ func (this *Ini) setKVNode(key string, val string) *Ini {
 			},
 		}
 
-		this.doc.KVs = append(this.doc.KVs, kvnode)
+		this.doc.InsertAfter(this.doc, last_kv_node, kvnode)
+		this.re_adjust_node_line()
 
 	} else {
+
 		for c := this.currectSection.FirstChild(); c != nil; c = c.NextSibling() {
 
 			kvnodev2 := c.(*ast.KVNode)
@@ -516,9 +516,15 @@ func (this *Ini) setKVNode(key string, val string) *Ini {
 			}
 
 			this.currectSection.AppendChild(this.currectSection, kvnode)
+			this.re_adjust_node_line()
 
 		}
 	}
 
 	return this
+}
+
+// TODO: support
+func (this *Ini) re_adjust_node_line() {
+
 }

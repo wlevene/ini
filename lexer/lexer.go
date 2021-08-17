@@ -1,6 +1,8 @@
 package lexer
 
 import (
+	"fmt"
+
 	"github.com/wlevene/ini/token"
 )
 
@@ -39,8 +41,26 @@ func (l *Lexer) readChar() {
 		l.char = l.Input[l.read_position]
 	}
 
+	if l.char == LineBreak {
+		fmt.Println("new line:", l.read_position)
+		l.line++
+	}
+
 	l.position = l.read_position
 	l.read_position++
+
+}
+
+func (l *Lexer) readLine() []byte {
+	position := l.position
+	for {
+		if l.char == LineBreak {
+			break
+		}
+		l.readChar()
+	}
+
+	return l.Input[position:l.position]
 }
 
 func (l *Lexer) rollback() {
@@ -54,28 +74,32 @@ func (l *Lexer) rollback() {
 func (l *Lexer) skipWhitespace() {
 	for l.char == ' ' ||
 		l.char == '\t' ||
-		l.char == '\n' ||
+		l.char == LineBreak ||
 		l.char == '\r' {
 
-		if l.char == '\n' {
-			l.line++
-		}
+		// if l.char == LineBreak {
+		// 	l.line++
+		// }
 		l.readChar()
 	}
 }
 
 func (l *Lexer) skipspace() {
-	for l.char == ' ' ||
-		l.char == '\t' {
+	for l.char == ' ' {
 		l.readChar()
 	}
+
+	// for l.char == ' ' ||
+	// 	l.char == '\t' {
+	// 	l.readChar()
+	// }
 }
 
 func (l *Lexer) skipline() {
 
 	for {
 		if l.char == LineBreak {
-			l.line++
+			// l.line++
 			break
 		}
 		l.readChar()
@@ -101,21 +125,25 @@ func (l *Lexer) NextToken() token.Token {
 	case '#':
 		fallthrough
 	case ';':
-		l.skipline()
+		tok.Line = l.line
+		tok.Literal = string(l.readLine())
+		tok.Type = token.TokenType_COMMENT
 
 	default:
+		tok.Line = l.line
 		tok.Literal = string(l.readStatement())
 		l.skipspace()
+
 		ch = l.char
 
 		if ch == '=' {
 			tok.Type = token.TokenType_KEY
 		} else if ch == ']' {
 			tok.Type = token.TokenType_SECTION
-		} else if ch == '\n' {
+		} else if ch == LineBreak {
 			tok.Type = token.TokenType_VALUE
 		}
-		tok.Line = l.line
+
 		// fmt.Println("---")
 		// fmt.Print("Literal:", tok.Literal)
 		// fmt.Print(" pch:", string(ch))
@@ -124,10 +152,12 @@ func (l *Lexer) NextToken() token.Token {
 		// fmt.Println(" type:", tok.Type)
 		// fmt.Println("---")
 		// fmt.Println("token:", tok.String())
-		return tok
+		// return tok
 	}
 
 	l.readChar()
+
+	fmt.Println("xxxx:", string(l.char))
 	return tok
 }
 
@@ -178,13 +208,11 @@ func newToken(tokenType token.TokenType, ch byte, line int) token.Token {
 
 func (l *Lexer) readStatement() []byte {
 	position := l.position
-	for {
-		if l.char == LineBreak ||
-			l.char == '=' ||
-			l.char == ']' ||
-			l.char == ' ' {
-			break
-		}
+	for l.char != LineBreak &&
+		l.char != '=' &&
+		l.char != ']' &&
+		l.char != ' ' {
+
 		l.readChar()
 	}
 	return l.Input[position:l.position]
@@ -202,7 +230,8 @@ func (l *Lexer) readSection() token.Token {
 			l.readChar()
 		}
 
-		if l.char == '\n' {
+		if l.char == LineBreak {
+			// l.line++
 			break
 		}
 	}

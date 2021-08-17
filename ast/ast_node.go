@@ -41,6 +41,7 @@ func (n *SetcionNode) Dump(source []byte, level int) {
 	name := n.Name.Literal
 	m := map[string]string{
 		"Section": fmt.Sprintf("[%v]", name),
+		"Line":    fmt.Sprintf("%v", n.Name.Line),
 	}
 	DumpHelper(n, source, level, m, nil)
 }
@@ -78,6 +79,42 @@ func (n *KVNode) Dump(source []byte, level int) {
 	m := map[string]string{
 		"Key":   fmt.Sprintf("%v", n.Key.Literal),
 		"Value": fmt.Sprintf("%v", n.Value.Literal),
+		"Line":  fmt.Sprintf("%v", n.Key.Line),
+	}
+
+	DumpHelper(n, source, level, m, nil)
+}
+
+type CommentNode struct {
+	BaseNode
+	Comment token.Token
+}
+
+var KindCommentNode = NewNodeKind("CommentNode")
+
+// Kind implements Node.Kind.
+func (n *CommentNode) Kind() NodeKind {
+	return KindCommentNode
+}
+
+func (n *CommentNode) Type() NodeType {
+	return TypeDocNode
+}
+
+func (n *CommentNode) IsRaw() bool {
+	return false
+}
+
+func (n *CommentNode) Text(source []byte) []byte {
+	return source
+}
+
+// Dump implements Node.Dump.
+func (n *CommentNode) Dump(source []byte, level int) {
+
+	m := map[string]string{
+		"Comment": fmt.Sprintf("%v", n.Comment.Literal),
+		"Line":    fmt.Sprintf("%v", n.Comment.Line),
 	}
 
 	DumpHelper(n, source, level, m, nil)
