@@ -3,7 +3,7 @@
 ![logo](./logo.png)
 
 
-#  INI Parser Library
+#  INI Parser & Write Library
 
 ini parser and write library for Golang,easy-use,fast
 
