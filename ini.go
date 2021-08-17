@@ -34,7 +34,9 @@ type (
 
 func New() *Ini {
 
-	in := &Ini{}
+	in := &Ini{
+		doc: &ast.Doc{},
+	}
 	return in
 }
 
@@ -397,6 +399,11 @@ func (this *Ini) Save(filename string) *Ini {
 		}
 
 		if sect_node, ok := c.(*ast.SetcionNode); ok {
+
+			if !is_last_type_comment {
+				result = fmt.Sprintf("%s\n", result)
+			}
+
 			is_last_type_comment = false
 			result = fmt.Sprintf("%s[%s]\n", result, sect_node.Name.Literal)
 
@@ -420,7 +427,11 @@ func (this *Ini) Save(filename string) *Ini {
 		}
 	}
 
-	os.Remove(filename)
+	this.err = os.Remove(filename)
+	if this.err != nil {
+		return this
+	}
+
 	var data = []byte(result)
 	this.err = ioutil.WriteFile(filename, data, 0666)
 
@@ -451,6 +462,14 @@ func (this *Ini) sectionForAstDoc(section string) {
 			}
 		}
 	}
+
+	this.currectSection = &ast.SetcionNode{
+		Name: token.Token{
+			Type:    token.TokenType_SECTION,
+			Literal: section,
+		},
+	}
+	this.doc.AppendChild(this.doc, this.currectSection)
 }
 
 func (this *Ini) getToken(key string) token.Token {
@@ -527,7 +546,12 @@ func (this *Ini) setKVNode(key string, val string) *Ini {
 			},
 		}
 
-		this.doc.InsertAfter(this.doc, last_kv_node, kvnode)
+		if last_kv_node == nil {
+			this.doc.AppendChild(this.doc, kvnode)
+		} else {
+			this.doc.InsertAfter(this.doc, last_kv_node, kvnode)
+		}
+
 		this.re_adjust_node_line()
 
 	} else {

@@ -39,7 +39,6 @@ func New(l *lexer.Lexer) *Parser {
 func (p *Parser) ParseDocument() (doc *ast.Doc, err error) {
 
 	doc = ast.NewDoc()
-	// doc.Statements = []ast.Statement{}
 
 	// Read two tokens, so currentToken and peekToken are both set.
 	p.nextToken()
@@ -112,40 +111,3 @@ func (p *Parser) peekTokenIs(t token.TokenType) bool {
 func (p *Parser) peekTokenAtSameLine() bool {
 	return p.currentToken.Line == p.peekToken.Line && p.peekToken.Type != token.TokenType_EOF
 }
-
-// func (p *Parser) parseStatement() ast.Statement {
-
-// 	var stmt ast.Statement
-// 	ast.
-// 	switch p.currentToken.Type {
-// case token.Return:
-// 	return p.parseReturnStatement()
-// case token.Def:
-// 	return p.parseDefMethodStatement()
-// case token.Comment:
-// 	return nil
-// case token.While:
-// 	return p.parseWhileStatement()
-// case token.Class:
-// 	return p.parseClassStatement()
-// case token.Module:
-// 	return p.parseModuleStatement()
-// case token.Next:
-// 	return &ast.NextStatement{BaseNode: &ast.BaseNode{Token: p.curToken}}
-// case token.Break:
-// 	return &ast.BreakStatement{BaseNode: &ast.BaseNode{Token: p.curToken}}
-// default:
-// 	exp := p.parseExpressionStatement()
-
-// 	// If parseExpressionStatement got error exp.Expression would be nil
-// 	if exp.Expression != nil {
-// 		// In REPL mode everything should return a value.
-// 		if p.Mode == REPLMode {
-// 			exp.Expression.MarkAsExp()
-// 		} else {
-// 			exp.Expression.MarkAsStmt()
-// 		}
-// 	}
-// 	}
-// 	return stmt
-// }

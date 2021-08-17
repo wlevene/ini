@@ -1,8 +1,6 @@
 package lexer
 
 import (
-	"fmt"
-
 	"github.com/wlevene/ini/token"
 )
 
@@ -16,8 +14,6 @@ type Lexer struct {
 	position      int
 	read_position int
 	line          int
-
-	// TODO: line_position
 }
 
 func New(input string) *Lexer {
@@ -42,7 +38,6 @@ func (l *Lexer) readChar() {
 	}
 
 	if l.char == LineBreak {
-		fmt.Println("new line:", l.read_position)
 		l.line++
 	}
 
@@ -63,23 +58,11 @@ func (l *Lexer) readLine() []byte {
 	return l.Input[position:l.position]
 }
 
-func (l *Lexer) rollback() {
-	// position := l.position
-	// for isLetter(l.char) || isDigit(l.char) {
-	// 	l.readChar()
-	// }
-	// return l.Input[position:l.position]
-}
-
 func (l *Lexer) skipWhitespace() {
 	for l.char == ' ' ||
 		l.char == '\t' ||
 		l.char == LineBreak ||
 		l.char == '\r' {
-
-		// if l.char == LineBreak {
-		// 	l.line++
-		// }
 		l.readChar()
 	}
 }
@@ -143,21 +126,9 @@ func (l *Lexer) NextToken() token.Token {
 		} else if ch == LineBreak {
 			tok.Type = token.TokenType_VALUE
 		}
-
-		// fmt.Println("---")
-		// fmt.Print("Literal:", tok.Literal)
-		// fmt.Print(" pch:", string(ch))
-		// fmt.Print(" pchc:", ch)
-		// fmt.Print(" pchcpos:", l.position)
-		// fmt.Println(" type:", tok.Type)
-		// fmt.Println("---")
-		// fmt.Println("token:", tok.String())
-		// return tok
 	}
 
 	l.readChar()
-
-	fmt.Println("xxxx:", string(l.char))
 	return tok
 }
 
@@ -231,7 +202,6 @@ func (l *Lexer) readSection() token.Token {
 		}
 
 		if l.char == LineBreak {
-			// l.line++
 			break
 		}
 	}

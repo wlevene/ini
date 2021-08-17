@@ -2,6 +2,7 @@ package ini
 
 import (
 	"fmt"
+	"io/ioutil"
 	"testing"
 	"time"
 )
@@ -253,9 +254,41 @@ k=v
 
 [section1]
 k1=v1
+
+[section3]
+k3=v3
 `
 	ini := New().Load([]byte(doc))
 	ini.Dump()
 
 	ini.Save("./save.ini")
+	fmt.Println(ini.Err())
+}
+
+func TestIniSave2(t *testing.T) {
+
+	filename := "./save.ini"
+	ini := New().Set("a1", 1)
+	ini.Dump()
+	ini.Save(filename)
+
+	bts, _ := ioutil.ReadFile(filename)
+
+	if string(bts) != "a1 = 1\n" {
+		t.Errorf("Error: %v", string(bts))
+	}
+}
+
+func TestIniSave3(t *testing.T) {
+
+	filename := "./save.ini"
+	ini := New().Set("a1", 1).Section("s1").Set("a2", "v2")
+	ini.Dump()
+	ini.Save(filename)
+
+	bts, _ := ioutil.ReadFile(filename)
+
+	if string(bts) != "a1 = 1\n\n[s1]\na2 = v2\n" {
+		t.Errorf("Error: %v", string(bts))
+	}
 }

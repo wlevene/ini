@@ -5,7 +5,7 @@
 
 #  INI Parser Library
 
-ini parser library for Golang,easy-use,fast
+ini parser and write library for Golang,easy-use,fast
 
 
 [![Build Status](https://travis-ci.org/meolu/walden.svg?branch=master)](https://github.com/wlevene/ini)
@@ -18,6 +18,7 @@ ini parser library for Golang,easy-use,fast
 * Supports file monitoring and takes effect in real time without reloading
 * Unmarshal to Struct
 * Marshal to Json
+* Write ini to File
 
 
 # Installation
@@ -247,70 +248,164 @@ Output
 }
 ```
 
+### Set Ini 
+```go
+doc := `
+k =v
+[section]
+a=b
+c=d
+`
+ini := New().Load([]byte(doc)).Section("section")
+fmt.Println("--------------------------------")
+ini.Dump()
+
+fmt.Println("--------------------------------")
+ini.Set("a", 11).Set("c", 12.3).Section("").Set("k", "SET")
+ini.Dump()
+
+v := ini.Section("section").GetInt("a")
+
+if v != 11 {
+    t.Errorf("Error: %d", v)
+}
+
+v1 := ini.GetFloat64("c")
+
+if v1 != 12.3 {
+    t.Errorf("Error: %f", v1)
+}
+
+v2 := ini.Section("").Get("k")
+if v2 != "SET" {
+    t.Errorf("Error: %s", v2)
+}
+```
+
+
+
+### Wirte Ini
+
+```go
+filename := "./save.ini"
+ini := New().Set("a1", 1)
+ini.Save(filename)
+fmt.Println(ini.Err())
+
+ini2 := New().Set("a1", 1).Section("s1").Set("a2", "v2")
+ini2.Save(filename)
+fmt.Println(ini2.Err())
+
+```
+
+
 
 ### Dump AST struct
 
 ```
-KVNode {
-    Key: a
-    Value: '23'34?::'<>,.'
-}
-KVNode {
-    Key: c
-    Value: d
-}
-Section {
-    Section: [s1]
-    KVNode {
-        Key: k
-        Value: 67676
+INIDocNode {
+    CommentNode {
+        Comment: ; this is comment
+        Line: 0
+    }
+    CommentNode {
+        Comment: ; author levene
+        Line: 1
+    }
+    CommentNode {
+        Comment: ; date 2021-8-1
+        Line: 2
     }
     KVNode {
-        Key: k2
-        Value: 34w2
-    }
-}
-Section {
-    Section: [s2]
-    KVNode {
-        Value: 3
-        Key: k
-    }
-    KVNode {
-        Key: k2
-        Value: 945
-    }
-    KVNode {
-        Key: k3
-        Value: -435
-    }
-    KVNode {
-        Key: k4
-        Value: 0.0.0.0
-    }
-    KVNode {
-        Value: 127.0.0.1
-        Key: k5
-    }
-    KVNode {
-        Key: k6
-        Value: levene@github.com
-    }
-    KVNode {
-        Key: k7
-        Value: ~/.path.txt
-    }
-    KVNode {
-        Key: k8
-        Value: ./34/34/uh.txt
-    }
-    KVNode {
-        Key: k9
-        Value: 234@!@#$%^&*()324
-    }
-    KVNode {
-        Key: k10
+        Key: a
         Value: '23'34?::'<>,.'
+        Line: 5
+    }
+    KVNode {
+        Key: c
+        Value: d
+        Line: 6
+    }
+    Section {
+        Section: [s1]
+        Line: 8
+        KVNode {
+            Value: 67676
+            Line: 9
+            Key: k
+        }
+        KVNode {
+            Key: k1
+            Value: fdasf
+            Line: 10
+        }
+        KVNode {
+            Value: 4w2
+            Line: 11
+            Key: k2
+        }
+    }
+    CommentNode {
+        Comment: # comment
+        Line: 13
+    }
+    CommentNode {
+        Line: 14
+        Comment: # 12.0.0.1
+    }
+    Section {
+        Section: [s2]
+        Line: 15
+        KVNode {
+            Value: 3
+            Line: 17
+            Key: k
+        }
+        KVNode {
+            Value: 945
+            Line: 20
+            Key: k2
+        }
+        KVNode {
+            Key: k3
+            Value: -435
+            Line: 21
+        }
+        KVNode {
+            Line: 22
+            Key: k4
+            Value: 0.0.0.0
+        }
+        KVNode {
+            Line: 24
+            Key: k5
+            Value: 127.0.0.1
+        }
+        KVNode {
+            Key: k6
+            Value: levene@github.com
+            Line: 25
+        }
+        KVNode {
+            Key: k7
+            Value: ~/.path.txt
+            Line: 27
+        }
+        KVNode {
+            Line: 28
+            Key: k8
+            Value: ./34/34/uh.txt
+        }
+        KVNode {
+            Key: k9
+            Value: 234@!@#$%^&*()324
+            Line: 30
+        }
+        KVNode {
+            Key: k10
+            Value: '23'34?::'<>,.'
+            Line: 31
+        }
     }
 }
 ```
