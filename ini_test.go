@@ -237,3 +237,25 @@ c=d
 	ini.Dump()
 
 }
+
+func TestIniSave(t *testing.T) {
+	doc := `
+; 123
+c11=d12312312
+# 434
+
+[section]
+k=v
+; dsfads 
+;123
+#3452345
+
+
+[section1]
+k1=v1
+`
+	ini := New().Load([]byte(doc))
+	ini.Dump()
+
+	ini.Save("./save.ini")
+}

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"strconv"
 	"strings"
 
@@ -376,11 +377,53 @@ func (this *Ini) DelSection(section string) *Ini {
 
 // TODO: implement Save
 func (this *Ini) Save(filename string) *Ini {
-	return this
-}
 
-// TODO: implement SaveFile
-func (this *Ini) SaveFile(filename string) *Ini {
+	if filename == "" {
+		return this
+	}
+
+	if this.doc == nil {
+		return this
+	}
+
+	var result string
+
+	is_last_type_comment := false
+	for c := this.doc.FirstChild(); c != nil; c = c.NextSibling() {
+		if kv_node, ok := c.(*ast.KVNode); ok {
+			is_last_type_comment = false
+			result = fmt.Sprintf("%s%s = %v\n", result, kv_node.Key.Literal, kv_node.Value.Literal)
+			continue
+		}
+
+		if sect_node, ok := c.(*ast.SetcionNode); ok {
+			is_last_type_comment = false
+			result = fmt.Sprintf("%s[%s]\n", result, sect_node.Name.Literal)
+
+			for c := sect_node.FirstChild(); c != nil; c = c.NextSibling() {
+				if kv_node, ok := c.(*ast.KVNode); ok {
+					result = fmt.Sprintf("%s%s = %v\n", result, kv_node.Key.Literal, kv_node.Value.Literal)
+					continue
+				}
+			}
+
+			continue
+		}
+
+		if comm_node, ok := c.(*ast.CommentNode); ok {
+			if !is_last_type_comment {
+				result = fmt.Sprintf("%s\n", result)
+			}
+
+			is_last_type_comment = true
+			result = fmt.Sprintf("%s%s\n", result, comm_node.Comment.Literal)
+		}
+	}
+
+	os.Remove(filename)
+	var data = []byte(result)
+	this.err = ioutil.WriteFile(filename, data, 0666)
+
 	return this
 }
 
