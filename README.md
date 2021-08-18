@@ -296,6 +296,50 @@ ini2 := New().Set("a1", 1).Section("s1").Set("a2", "v2")
 ini2.Save(filename)
 fmt.Println(ini2.Err())
 
+// ------
+
+doc := `
+; 123
+c11=d12312312
+# 434
+
+[section]
+k=v
+; dsfads 
+;123
+#3452345
+
+
+[section1]
+k1=v1
+
+[section3]
+k3=v3
+`
+ini3 := New().Load([]byte(doc))
+ini.Save("./save.ini")
+
+```
+
+file content
+```ini
+
+; 123
+c11 = d12312312
+
+# 434
+[section]
+k = v
+
+; dsfads 
+;123
+#3452345
+[section1]
+k1 = v1
+
+[section3]
+k3 = v3
+
 ```
 
 
