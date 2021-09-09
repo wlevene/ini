@@ -10,6 +10,7 @@ ini parser and write library for Golang,easy-use,fast
 
 [![Build Status](https://travis-ci.org/meolu/walden.svg?branch=master)](https://github.com/wlevene/ini)
 ![version](https://img.shields.io/badge/version-0.1.5-blue)
+[![Go Report Card](https://goreportcard.com/badge/github.com/wlevene/ini)](https://goreportcard.com/report/github.com/wlevene/ini)
 
 # Features
 
