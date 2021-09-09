@@ -206,7 +206,7 @@ func (this *Ini) GetDef(key string, def string) string {
 	}
 
 	tok := this.getToken(key)
-	if tok.Type != token.TokenType_VALUE {
+	if tok.Type != token.TokenTypeVALUE {
 		return def
 	}
 
@@ -465,7 +465,7 @@ func (this *Ini) sectionForAstDoc(section string) {
 
 	this.currectSection = &ast.SetcionNode{
 		Name: token.Token{
-			Type:    token.TokenType_SECTION,
+			Type:    token.TokenTypeSECTION,
 			Literal: section,
 		},
 	}
@@ -535,12 +535,12 @@ func (this *Ini) setKVNode(key string, val string) *Ini {
 
 		kvnode := &ast.KVNode{
 			Key: token.Token{
-				Type:    token.TokenType_KEY,
+				Type:    token.TokenTypeKEY,
 				Literal: key,
 				Line:    line,
 			},
 			Value: token.Token{
-				Type:    token.TokenType_VALUE,
+				Type:    token.TokenTypeVALUE,
 				Literal: val,
 				Line:    line,
 			},
@@ -571,12 +571,12 @@ func (this *Ini) setKVNode(key string, val string) *Ini {
 
 			kvnode := &ast.KVNode{
 				Key: token.Token{
-					Type:    token.TokenType_KEY,
+					Type:    token.TokenTypeKEY,
 					Literal: key,
 					Line:    line,
 				},
 				Value: token.Token{
-					Type:    token.TokenType_VALUE,
+					Type:    token.TokenTypeVALUE,
 					Literal: val,
 					Line:    line,
 				},

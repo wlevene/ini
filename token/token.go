@@ -5,19 +5,19 @@ import "fmt"
 type TokenType string
 
 const (
-	TokenType_ILLEGAL = "ILLEGAL"
-	TokenType_EOF     = "EOF"
-	Ident             = "Ident"
+	TokenTypeILLEGAL = "ILLEGAL"
+	TokenTypeEOF     = "EOF"
+	Ident            = "Ident"
 
-	TokenType_SECTION  = "SECTION"
-	TokenType_KEY      = "KEY"
-	TokenType_VALUE    = "VALUE"
-	TokenType_COMMENT  = "#"
-	TokenType_COMMENT2 = "#"
+	TokenTypeSECTION  = "SECTION"
+	TokenTypeKEY      = "KEY"
+	TokenTypeVALUE    = "VALUE"
+	TokenTypeCOMMENT  = "#"
+	TokenTypeCOMMENT2 = "#"
 
-	TokenType_ASSIGN   = "="
-	TokenType_LBRACKET = "["
-	TokenType_RBRACKET = "]"
+	TokenTypeASSIGN   = "="
+	TokenTypeLBRACKET = "["
+	TokenTypeRBRACKET = "]"
 
 	RETURN = "RETURN"
 )
