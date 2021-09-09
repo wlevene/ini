@@ -96,21 +96,21 @@ func (l *Lexer) NextToken() token.Token {
 
 	switch l.char {
 	case '[':
-		tok = newToken(token.TokenType_LBRACKET, l.char, l.line)
+		tok = newToken(token.TokenTypeLBRACKET, l.char, l.line)
 	case '=':
-		tok = newToken(token.TokenType_ASSIGN, l.char, l.line)
+		tok = newToken(token.TokenTypeASSIGN, l.char, l.line)
 	case ']':
-		tok = newToken(token.TokenType_RBRACKET, l.char, l.line)
+		tok = newToken(token.TokenTypeRBRACKET, l.char, l.line)
 	case 0:
 		tok.Literal = ""
-		tok.Type = token.TokenType_EOF
+		tok.Type = token.TokenTypeEOF
 		return tok
 	case '#':
 		fallthrough
 	case ';':
 		tok.Line = l.line
 		tok.Literal = string(l.readLine())
-		tok.Type = token.TokenType_COMMENT
+		tok.Type = token.TokenTypeCOMMENT
 
 	default:
 		tok.Line = l.line
@@ -120,11 +120,11 @@ func (l *Lexer) NextToken() token.Token {
 		ch = l.char
 
 		if ch == '=' {
-			tok.Type = token.TokenType_KEY
+			tok.Type = token.TokenTypeKEY
 		} else if ch == ']' {
-			tok.Type = token.TokenType_SECTION
+			tok.Type = token.TokenTypeSECTION
 		} else if ch == LineBreak {
-			tok.Type = token.TokenType_VALUE
+			tok.Type = token.TokenTypeVALUE
 		}
 	}
 
@@ -207,7 +207,7 @@ func (l *Lexer) readSection() token.Token {
 	}
 
 	return token.Token{
-		Type:    token.TokenType_SECTION,
+		Type:    token.TokenTypeSECTION,
 		Literal: string(l.Input[position:l.position]),
 		Line:    l.line,
 	}

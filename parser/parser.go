@@ -47,9 +47,9 @@ func (p *Parser) ParseDocument() (doc *ast.Doc, err error) {
 	var curSection *ast.SetcionNode
 	var KV *ast.KVNode
 
-	for !p.curTokenIs(token.TokenType_EOF) {
+	for !p.curTokenIs(token.TokenTypeEOF) {
 
-		if p.currentToken.Type == token.TokenType_SECTION {
+		if p.currentToken.Type == token.TokenTypeSECTION {
 
 			curSection = nil
 			curSection = &ast.SetcionNode{
@@ -60,12 +60,12 @@ func (p *Parser) ParseDocument() (doc *ast.Doc, err error) {
 				doc.AppendChild(doc, curSection)
 			}
 
-		} else if p.currentToken.Type == token.TokenType_KEY {
+		} else if p.currentToken.Type == token.TokenTypeKEY {
 			KV = nil
 			KV = &ast.KVNode{}
 			KV.Key = p.currentToken
 
-		} else if p.currentToken.Type == token.TokenType_VALUE {
+		} else if p.currentToken.Type == token.TokenTypeVALUE {
 			if KV != nil {
 				KV.Value = p.currentToken
 				if curSection != nil {
@@ -74,7 +74,7 @@ func (p *Parser) ParseDocument() (doc *ast.Doc, err error) {
 					doc.AppendChild(doc, KV)
 				}
 			}
-		} else if p.currentToken.Type == token.TokenType_COMMENT {
+		} else if p.currentToken.Type == token.TokenTypeCOMMENT {
 			comment := &ast.CommentNode{
 				Comment: p.currentToken,
 			}
@@ -109,5 +109,5 @@ func (p *Parser) peekTokenIs(t token.TokenType) bool {
 // }
 
 func (p *Parser) peekTokenAtSameLine() bool {
-	return p.currentToken.Line == p.peekToken.Line && p.peekToken.Type != token.TokenType_EOF
+	return p.currentToken.Line == p.peekToken.Line && p.peekToken.Type != token.TokenTypeEOF
 }

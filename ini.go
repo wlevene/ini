@@ -206,7 +206,7 @@ func (this *Ini) GetDef(key string, def string) string {
 	}
 
 	tok := this.getToken(key)
-	if tok.Type != token.TokenType_VALUE {
+	if tok.Type != token.TokenTypeVALUE {
 		return def
 	}
 
@@ -283,29 +283,29 @@ func (this *Ini) Set(key string, val interface{}) *Ini {
 		return this
 	}
 
-	var val_str string
+	var valStr string
 	switch val.(type) {
 	case int:
-		val_str = fmt.Sprintf("%d", val.(int))
+		valStr = fmt.Sprintf("%d", val.(int))
 	case int32:
-		val_str = fmt.Sprintf("%d", val.(int32))
+		valStr = fmt.Sprintf("%d", val.(int32))
 	case int64:
-		val_str = fmt.Sprintf("%d", val.(int64))
+		valStr = fmt.Sprintf("%d", val.(int64))
 	case float32:
-		val_str = strconv.FormatFloat(float64(val.(float32)), 'f', -1, 32)
+		valStr = strconv.FormatFloat(float64(val.(float32)), 'f', -1, 32)
 	case float64:
-		val_str = strconv.FormatFloat(float64(val.(float64)), 'f', -1, 64)
+		valStr = strconv.FormatFloat(float64(val.(float64)), 'f', -1, 64)
 	case string:
-		val_str = val.(string)
+		valStr = val.(string)
 	default:
 		return this
 	}
 
-	val_str = strings.Replace(val_str, "\n", "", -1)
-	val_str = strings.Replace(val_str, "\t", "", -1)
-	val_str = strings.Trim(val_str, " ")
+	valStr = strings.Replace(valStr, "\n", "", -1)
+	valStr = strings.Replace(valStr, "\t", "", -1)
+	valStr = strings.Trim(valStr, " ")
 
-	this.setKVNode(key, val_str)
+	this.setKVNode(key, valStr)
 
 	return this
 
@@ -390,21 +390,21 @@ func (this *Ini) Save(filename string) *Ini {
 
 	var result string
 
-	is_last_type_comment := false
+	isLastTypeComment := false
 	for c := this.doc.FirstChild(); c != nil; c = c.NextSibling() {
 		if kv_node, ok := c.(*ast.KVNode); ok {
-			is_last_type_comment = false
+			isLastTypeComment = false
 			result = fmt.Sprintf("%s%s = %v\n", result, kv_node.Key.Literal, kv_node.Value.Literal)
 			continue
 		}
 
 		if sect_node, ok := c.(*ast.SetcionNode); ok {
 
-			if !is_last_type_comment {
+			if !isLastTypeComment {
 				result = fmt.Sprintf("%s\n", result)
 			}
 
-			is_last_type_comment = false
+			isLastTypeComment = false
 			result = fmt.Sprintf("%s[%s]\n", result, sect_node.Name.Literal)
 
 			for c := sect_node.FirstChild(); c != nil; c = c.NextSibling() {
@@ -418,11 +418,11 @@ func (this *Ini) Save(filename string) *Ini {
 		}
 
 		if comm_node, ok := c.(*ast.CommentNode); ok {
-			if !is_last_type_comment {
+			if !isLastTypeComment {
 				result = fmt.Sprintf("%s\n", result)
 			}
 
-			is_last_type_comment = true
+			isLastTypeComment = true
 			result = fmt.Sprintf("%s%s\n", result, comm_node.Comment.Literal)
 		}
 	}
@@ -465,7 +465,7 @@ func (this *Ini) sectionForAstDoc(section string) {
 
 	this.currectSection = &ast.SetcionNode{
 		Name: token.Token{
-			Type:    token.TokenType_SECTION,
+			Type:    token.TokenTypeSECTION,
 			Literal: section,
 		},
 	}
@@ -517,10 +517,10 @@ func (this *Ini) setKVNode(key string, val string) *Ini {
 
 	if this.currectSection == nil {
 
-		var last_kv_node *ast.KVNode
+		var lastKvNode *ast.KVNode
 		for c := this.doc.FirstChild(); c != nil; c = c.NextSibling() {
 			if kv_node, ok := c.(*ast.KVNode); ok {
-				last_kv_node = kv_node
+				lastKvNode = kv_node
 				if kv_node.Key.Literal == key {
 					kv_node.Value.Literal = val
 					return this
@@ -535,21 +535,21 @@ func (this *Ini) setKVNode(key string, val string) *Ini {
 
 		kvnode := &ast.KVNode{
 			Key: token.Token{
-				Type:    token.TokenType_KEY,
+				Type:    token.TokenTypeKEY,
 				Literal: key,
 				Line:    line,
 			},
 			Value: token.Token{
-				Type:    token.TokenType_VALUE,
+				Type:    token.TokenTypeVALUE,
 				Literal: val,
 				Line:    line,
 			},
 		}
 
-		if last_kv_node == nil {
+		if lastKvNode == nil {
 			this.doc.AppendChild(this.doc, kvnode)
 		} else {
-			this.doc.InsertAfter(this.doc, last_kv_node, kvnode)
+			this.doc.InsertAfter(this.doc, lastKvNode, kvnode)
 		}
 
 		this.re_adjust_node_line()
@@ -571,12 +571,12 @@ func (this *Ini) setKVNode(key string, val string) *Ini {
 
 			kvnode := &ast.KVNode{
 				Key: token.Token{
-					Type:    token.TokenType_KEY,
+					Type:    token.TokenTypeKEY,
 					Literal: key,
 					Line:    line,
 				},
 				Value: token.Token{
-					Type:    token.TokenType_VALUE,
+					Type:    token.TokenTypeVALUE,
 					Literal: val,
 					Line:    line,
 				},

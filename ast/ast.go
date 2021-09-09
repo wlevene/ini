@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// nottype & nodekind
 type NodeType int
 type NodeKind int
 
