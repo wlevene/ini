@@ -2,7 +2,6 @@
 
 ![logo](./logo.png)
 
-
 #  INI Parser & Write Library
 
 ini parser and write library for Golang,easy-use,fast
@@ -14,13 +13,12 @@ ini parser and write library for Golang,easy-use,fast
 [![Mentioned in Awesome Go](https://awesome.re/mentioned-badge-flat.svg)](https://github.com/avelino/awesome-go)
 
 # Features
-
 * Can be read by []byte
 * Can be read by file
 * Supports file monitoring and takes effect in real time without reloading
 * Unmarshal to Struct
 * Marshal to Json
-* Write ini to File
+* Write to File
 
 
 # Installation
