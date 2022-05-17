@@ -13,7 +13,7 @@ const (
 	TokenTypeKEY      = "KEY"
 	TokenTypeVALUE    = "VALUE"
 	TokenTypeCOMMENT  = "#"
-	TokenTypeCOMMENT2 = "#"
+	TokenTypeCOMMENT2 = ";"
 
 	TokenTypeASSIGN   = "="
 	TokenTypeLBRACKET = "["

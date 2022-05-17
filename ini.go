@@ -16,8 +16,6 @@ import (
 	"github.com/fsnotify/fsnotify"
 )
 
-// TODO: new section
-
 type (
 	Ini struct {
 		currectSection *ast.SetcionNode
@@ -333,9 +331,6 @@ func (this *Ini) Del(key string) *Ini {
 				continue
 			}
 
-			// if sect_node, ok := c.(*ast.SetcionNode); ok {
-			// 	continue
-			// }
 		}
 
 	} else {
@@ -377,7 +372,6 @@ func (this *Ini) DelSection(section string) *Ini {
 	return this
 }
 
-// TODO: implement Save
 func (this *Ini) Save(filename string) *Ini {
 
 	if filename == "" {
