@@ -4,7 +4,9 @@
 
 #  INI Parser & Reader Writer Library
 
-ini parser and Reader Writer library for Golang,easy-use,fast
+## Introduction
+
+The INI Parser & Reader Writer Library is a fast and easy-to-use library for parsing and manipulating INI files in the Go programming language. It provides functionality to read INI files from both byte slices and files, supports real-time file monitoring, and offers options to unmarshal INI data into Go structs, marshal data to JSON, and write data back to files.
 
 
 [![Build Status](https://travis-ci.org/meolu/walden.svg?branch=master)](https://github.com/wlevene/ini)
@@ -12,23 +14,23 @@ ini parser and Reader Writer library for Golang,easy-use,fast
 [![Go Report Card](https://goreportcard.com/badge/github.com/wlevene/ini)](https://goreportcard.com/report/github.com/wlevene/ini)
 [![Mentioned in Awesome Go](https://awesome.re/mentioned-badge-flat.svg)](https://github.com/avelino/awesome-go)
 
-# Features
-* Read by []byte
-* Read by file
-* Supports file monitoring and takes effect in real time without reloading
-* Unmarshal to Struct
-* Marshal to Json
-* Write to File
+## Features
+* **Read by []byte**: The library allows you to parse INI data stored in a byte slice.
+* **Read by file**: You can also read INI data directly from a file.
+* **Real-time file monitoring**: The library supports file monitoring, allowing you to observe changes in INI files without the need for manual reloading.
+* **Unmarshal to Struct**: It provides the ability to map INI data to Go structs, making it convenient to work with structured data.
+* **Marshal to JSON**: You can easily convert INI data to JSON format using the library's marshal functionality.
+* **Write to File**: The library allows you to write INI data back to files, preserving the original file format.
 
 
-# Installation
+## Installation
 
 ```shell
 go get github.com/wlevene/ini
 ```
 
 
-# Example
+## Example
 
 ```go
 import (
