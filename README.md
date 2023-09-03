@@ -2,9 +2,9 @@
 
 ![logo](./logo.png)
 
-#  INI Parser & Reader Writer Library
+# INI Parser & Reader Writer Library
 
-ini parser and Reader Writer library for Golang,easy-use,fast
+INI parser and Reader Writer library for Golang, designed to be easy to use and lightning fast! 🚀
 
 
 [![Build Status](https://travis-ci.org/meolu/walden.svg?branch=master)](https://github.com/wlevene/ini)
@@ -13,12 +13,15 @@ ini parser and Reader Writer library for Golang,easy-use,fast
 [![Mentioned in Awesome Go](https://awesome.re/mentioned-badge-flat.svg)](https://github.com/avelino/awesome-go)
 
 # Features
-* Read by []byte
-* Read by file
-* Supports file monitoring and takes effect in real time without reloading
-* Unmarshal to Struct
-* Marshal to Json
-* Write to File
+
+✨ Read by []byte
+✨ Read from files
+✨ Supports real-time file monitoring without the need to reload
+✨ Unmarshal to Struct
+✨ Marshal to JSON
+✨ Write to File
+
+Give it a try and supercharge your INI parsing and handling in Go! 🚀#
 
 
 # Installation
