@@ -481,7 +481,7 @@ func DumpHelper(v Node, source []byte, level int, kv map[string]string, cb func(
 	name := v.Kind().String()
 	indent := strings.Repeat("    ", level)
 	fmt.Printf("%s%s {\n", indent, name)
-	indent2 := strings.Repeat("    ", level+1)
+	// indent2 := strings.Repeat("    ", level+1)
 	// if v.Type() == TypeBlock {
 	// 	fmt.Printf("%sRawText: \"", indent2)
 	// 	for i := 0; i < v.Lines().Len(); i++ {
@@ -491,9 +491,9 @@ func DumpHelper(v Node, source []byte, level int, kv map[string]string, cb func(
 	// 	fmt.Printf("\"\n")
 	// 	fmt.Printf("%sHasBlankPreviousLines: %v\n", indent2, v.HasBlankPreviousLines())
 	// }
-	for name, value := range kv {
-		fmt.Printf("%s%s: %s\n", indent2, name, value)
-	}
+	// for name, value := range kv {
+	// 	fmt.Printf("%s%s: %s\n", indent2, name, value)
+	// }
 
 	if cb != nil {
 		cb(level + 1)
@@ -502,7 +502,7 @@ func DumpHelper(v Node, source []byte, level int, kv map[string]string, cb func(
 	for c := v.FirstChild(); c != nil; c = c.NextSibling() {
 		c.Dump(source, level+1)
 	}
-	fmt.Printf("%s}\n", indent)
+	// fmt.Printf("%s}\n", indent)
 }
 
 // WalkStatus represents a current status of the Walk function.

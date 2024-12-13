@@ -2,7 +2,6 @@ package ini
 
 import (
 	"errors"
-	"fmt"
 	"reflect"
 	"strconv"
 	"strings"
@@ -16,7 +15,6 @@ func Unmarshal(data []byte, v interface{}) error {
 
 	mp := New().Load(data).Marshal2Map()
 
-	fmt.Println("map:", mp)
 	bindTag("ini", v, mp)
 	return nil
 }
