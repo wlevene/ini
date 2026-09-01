@@ -3,6 +3,7 @@ package ini
 import (
 	"fmt"
 	"io/ioutil"
+        "path/filepath"
 	"testing"
 	"time"
 )
@@ -291,4 +292,42 @@ func TestIniSave3(t *testing.T) {
 	if string(bts) != "a1 = 1\n\n[s1]\na2 = v2\n" {
 		t.Errorf("Error: %v", string(bts))
 	}
+}
+
+func TestIniSaveCreateMissingFile(t *testing.T) {
+        filename := filepath.Join(t.TempDir(), "save.ini")
+        ini := New().Set("a1", 1)
+
+        ini.Save(filename)
+        if ini.Err() != nil {
+                t.Fatalf("Save returned error: %v", ini.Err())
+        }
+
+        bts, err := ioutil.ReadFile(filename)
+        if err != nil {
+                t.Fatalf("ReadFile returned error: %v", err)
+        }
+
+        if string(bts) != "a1 = 1\n" {
+                t.Fatalf("unexpected file content: %q", string(bts))
+        }
+}
+
+func TestIniSaveCreateMissingDirectories(t *testing.T) {
+        filename := filepath.Join(t.TempDir(), "nested", "config", "save.ini")
+        ini := New().Set("a1", 1).Section("s1").Set("a2", "v2")
+
+        ini.Save(filename)
+        if ini.Err() != nil {
+                t.Fatalf("Save returned error: %v", ini.Err())
+        }
+
+        bts, err := ioutil.ReadFile(filename)
+        if err != nil {
+                t.Fatalf("ReadFile returned error: %v", err)
+        }
+
+        if string(bts) != "a1 = 1\n\n[s1]\na2 = v2\n" {
+                t.Fatalf("unexpected file content: %q", string(bts))
+        }
 }

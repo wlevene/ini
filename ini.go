@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+        "path/filepath"
 	"strconv"
 	"strings"
 
@@ -421,9 +422,12 @@ func (this *Ini) Save(filename string) *Ini {
 		}
 	}
 
-	this.err = os.Remove(filename)
-	if this.err != nil {
-		return this
+        dir := filepath.Dir(filename)
+        if dir != "." && dir != "" {
+                this.err = os.MkdirAll(dir, 0755)
+                if this.err != nil {
+                        return this
+                }
 	}
 
 	var data = []byte(result)
