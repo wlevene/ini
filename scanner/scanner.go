@@ -27,6 +27,8 @@ func (this *Scanner) Scan() {
 
 	doc, err := this.p.ParseDocument()
 
-	fmt.Println("err:", err)
+	if err != nil {
+		fmt.Println("err:", err)
+	}
 	doc.DumpV2()
 }
